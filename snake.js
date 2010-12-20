@@ -56,13 +56,49 @@ JS_SNAKE.Snake = (function () {
     posArray.push([2, 3]);
     posArray.push([3, 3]);
     posArray.push([3, 4]);
+    posArray.push([3, 5]);
+    posArray.push([3, 6]);
+    posArray.push([4, 6]);
+    posArray.push([5, 6]);
     ctx = context;
+  }
+
+  function drawEnd(body, end) {
+
+  }
+
+  function drawMain(prev, curr, next) {
+    if (prev[0] === curr[0] && curr[0] === next[0]) {
+      //horizontal
+      ctx.fillRect(JS_SNAKE.blockSize * curr[0] + 1, JS_SNAKE.blockSize * curr[1],
+        8, JS_SNAKE.blockSize);
+    }
+    else if (prev[1] === curr[1] && curr[1] === next[1]) {
+      //vertical
+      ctx.fillRect(JS_SNAKE.blockSize * curr[0], JS_SNAKE.blockSize * curr[1] + 3,
+        JS_SNAKE.blockSize, 3);
+    }
+    else {
+      //other
+    }
+  }
+
+  //previous, current and next positions
+  function drawSection(prev, curr, next) {
+    if (prev === undefined) {
+      drawEnd(curr, next);
+    }
+    else if (next === undefined) {
+      drawEnd(curr, prev);
+    }
+    else {
+      drawMain(prev, curr, next);
+    }
   }
 
   function draw() {
     for(var i = 0; i < posArray.length; i++) {
-      ctx.fillRect(JS_SNAKE.blockSize * posArray[i][0], JS_SNAKE.blockSize * posArray[i][1],
-      JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+      drawSection(posArray[i - 1], posArray[i], posArray[i + 1]);
     }
 
   }
