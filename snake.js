@@ -4,6 +4,20 @@ $(function () {
   JS_SNAKE.Game.init();
 });
 
+JS_SNAKE.equalCoordinates = function (coord1, coord2) {
+  return coord1[0] === coord2[0] && coord1[1] === coord2[1];
+}
+
+JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
+  var isInArray = false;
+  $.each(arr, function (index, item) {
+    if (JS_SNAKE.equalCoordinates(coord, item)) {
+      isInArray = true;
+    }
+  });
+  return isInArray;
+};
+
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
@@ -17,7 +31,7 @@ JS_SNAKE.Game = (function () {
   function gameLoop() {
     counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
-    snake.advance();
+    snake.advance(apple);
     draw();
 
     if (snake.checkCollision()) {
@@ -37,6 +51,7 @@ JS_SNAKE.Game = (function () {
   }
 
   function drawBorder() {
+    ctx.save();
     ctx.strokeStyle = 'gray';
     ctx.lineWidth = 2;
     var corners = [
@@ -50,6 +65,7 @@ JS_SNAKE.Game = (function () {
       ctx.lineTo.apply(ctx, corner);
     });
     ctx.stroke();
+    ctx.restore();
   }
   
   function bindEvents() {
@@ -102,12 +118,16 @@ JS_SNAKE.Apple = (function () {
   }
 
   function draw() {
+    ctx.save();
+    ctx.fillStyle = '0a0';
     ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
       JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+    ctx.restore();
   }
 
 
   function setNewPosition(snakeArray) {
+
   }
 
   function getPosition() {
@@ -172,24 +192,22 @@ JS_SNAKE.Snake = (function () {
   }
 
   function checkCollision() {
-    var collision = false;
+    var wallCollision = false;
+    var snakeCollision = false;
     var head = posArray[0];
     var snakeX = head[0];
     var snakeY = head[1];
     var widthInBlocks = JS_SNAKE.width / JS_SNAKE.blockSize;
     var heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
     if (snakeX < 0 || snakeY < 0 || snakeX >= widthInBlocks || snakeY >= heightInBlocks) {
-      collision = true;
+      wallCollision = true;
     }
-    $.each(posArray.slice(1), function (index, item) {
-      if (snakeX === item[0] && snakeY === item[1]) {
-        collision = true;
-      }
-    });
-    return collision;
+    //check if the snake head coords overlap the rest of the snake
+    snakeCollision = JS_SNAKE.checkCoordinateInArray(head, posArray.slice(1));
+    return wallCollision || snakeCollision;
   }
 
-  function advance() {
+  function advance(apple) {
     var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
     direction = nextDirection;
     switch (direction) {
@@ -211,7 +229,12 @@ JS_SNAKE.Snake = (function () {
 
     previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
-    posArray.pop();
+    if (JS_SNAKE.equalCoordinates(posArray[0], apple.getPosition())) {
+      apple.setNewPosition(posArray);
+    }
+    else {
+      posArray.pop();
+    }
   }
 
   function retreat() {
