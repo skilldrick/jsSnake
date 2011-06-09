@@ -1,8 +1,5 @@
 var JS_SNAKE = {};
 
-$(document).ready(function () {
-  JS_SNAKE.Game.init();
-});
 
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
@@ -36,9 +33,11 @@ JS_SNAKE.Game = (function () {
   }
 
   function init() {
-    canvas = document.getElementById('canvas');
-    canvas.width = JS_SNAKE.width;
-    canvas.height = JS_SNAKE.height;
+    //canvas = document.getElementById('canvas');
+    canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    canvas.setAttribute('width', JS_SNAKE.width);
+    canvas.setAttribute('height', JS_SNAKE.height);
     ctx = canvas.getContext('2d');
     ctx.fillStyle = "black";
     snake = JS_SNAKE.Snake;
@@ -54,16 +53,12 @@ JS_SNAKE.Game = (function () {
 JS_SNAKE.Snake = (function () {
   var posArray = [];
   var ctx;
+  var direction;
 
   function init(context) {
-    posArray.push([2, 3]);
-    posArray.push([3, 3]);
-    posArray.push([3, 4]);
-    posArray.push([3, 5]);
-    posArray.push([3, 6]);
-    posArray.push([4, 6]);
-    posArray.push([5, 6]);
     ctx = context;
+    direction = 'right';
+    posArray.push([4, 4]);
   }
 
   //previous, current and next positions
@@ -79,7 +74,7 @@ JS_SNAKE.Snake = (function () {
   }
 
   function advance() {
-    posArray.pop();
+    //posArray.pop();
   }
 
   return {
@@ -88,3 +83,6 @@ JS_SNAKE.Snake = (function () {
     advance: advance
   };
 })();
+
+
+JS_SNAKE.Game.init();
