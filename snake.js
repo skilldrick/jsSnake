@@ -7,7 +7,7 @@ $(function () {
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
-  var frameLength = 1000;
+  var frameLength = 100;
   var snake;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
@@ -19,7 +19,14 @@ JS_SNAKE.Game = (function () {
     drawGrid(); //delete this eventually
     snake.advance();
     snake.draw();
-    setTimeout(gameLoop, frameLength);
+
+    if (snake.checkCollision()) {
+      gameOver();
+    }
+
+    else {
+      setTimeout(gameLoop, frameLength);
+    }
   }
   
   function drawGrid() {
@@ -82,7 +89,12 @@ JS_SNAKE.Snake = (function () {
   function init(context) {
     ctx = context;
     nextDirection = direction = 'right';
+    posArray.push([5, 4]);
     posArray.push([4, 4]);
+    posArray.push([3, 4]);
+    posArray.push([2, 4]);
+    posArray.push([1, 4]);
+    posArray.push([0, 4]);
   }
 
   function setDirection(newDirection) {
@@ -116,6 +128,18 @@ JS_SNAKE.Snake = (function () {
     }
   }
 
+  function checkCollision() {
+    var head = posArray[0];
+    var snakeX = head[0];
+    var snakeY = head[1];
+    var widthInBlocks = JS_SNAKE.width / JS_SNAKE.blockSize;
+    var heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
+    if (snakeX < 0 || snakeY < 0 || snakeX >= widthInBlocks || snakeY >= heightInBlocks) {
+      return true;
+    }
+    return false;
+  }
+
   function advance() {
     var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
     direction = nextDirection;
@@ -144,7 +168,8 @@ JS_SNAKE.Snake = (function () {
     init: init,
     draw: draw,
     advance: advance,
-    setDirection: setDirection
+    setDirection: setDirection,
+    checkCollision: checkCollision
   };
 })();
 
