@@ -7,7 +7,8 @@ $(document).ready(function () {
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
-  var frameLength = 100;
+  var frameLength = 1000;
+  var snake;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
   JS_SNAKE.blockSize = 10;
@@ -16,7 +17,8 @@ JS_SNAKE.Game = (function () {
     counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
     drawGrid();
-    JS_SNAKE.Snake.draw();
+    snake.advance();
+    snake.draw();
     setTimeout(gameLoop, frameLength);
   }
   
@@ -39,7 +41,8 @@ JS_SNAKE.Game = (function () {
     canvas.height = JS_SNAKE.height;
     ctx = canvas.getContext('2d');
     ctx.fillStyle = "black";
-    JS_SNAKE.Snake.init(ctx);
+    snake = JS_SNAKE.Snake;
+    snake.init(ctx);
     gameLoop();
   }
 
@@ -75,8 +78,13 @@ JS_SNAKE.Snake = (function () {
     }
   }
 
+  function advance() {
+    posArray.pop();
+  }
+
   return {
     init: init,
-    draw: draw
+    draw: draw,
+    advance: advance
   };
 })();
