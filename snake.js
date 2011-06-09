@@ -16,32 +16,32 @@ JS_SNAKE.Game = (function () {
   function gameLoop() {
     counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
-    drawGrid(); //delete this eventually
     snake.advance();
-    snake.draw();
+    drawBorder();
 
     if (snake.checkCollision()) {
+      snake.retreat(); //move snake back to previous position
+      snake.draw();
       gameOver();
     }
-
     else {
+      snake.draw();
       setTimeout(gameLoop, frameLength);
     }
   }
-  
-  function drawGrid() {
+
+  function drawBorder() {
     ctx.strokeStyle = 'gray';
-    for (var x = 0.5; x < JS_SNAKE.width; x += JS_SNAKE.blockSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, JS_SNAKE.height);
-    }
-    for (var y = 0.5; y < JS_SNAKE.height; y += JS_SNAKE.blockSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(JS_SNAKE.width, y);
-    }
+    ctx.lineWidth = 2;
+    var corners = [[1, 1], [JS_SNAKE.width - 1, 1],
+      [JS_SNAKE.width - 1, JS_SNAKE.height - 1], [1, JS_SNAKE.height - 1]];
+    ctx.moveTo.apply(ctx, corners[3]);
+    $.each(corners, function (index, corner) {
+      ctx.lineTo.apply(ctx, corner);
+    });
     ctx.stroke();
   }
-
+  
   function bindEvents() {
     $('body').keydown(function (event) {
       switch (event.which) {
@@ -81,6 +81,7 @@ JS_SNAKE.Game = (function () {
 })();
 
 JS_SNAKE.Snake = (function () {
+  var previousPosArray;
   var posArray = [];
   var ctx;
   var direction;
@@ -168,14 +169,20 @@ JS_SNAKE.Snake = (function () {
       throw('Invalid direction');
     }
 
+    previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
     posArray.pop();
+  }
+
+  function retreat() {
+    posArray = previousPosArray;
   }
 
   return {
     init: init,
     draw: draw,
     advance: advance,
+    retreat: retreat,
     setDirection: setDirection,
     checkCollision: checkCollision
   };
