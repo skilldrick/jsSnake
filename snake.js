@@ -7,7 +7,7 @@ $(function () {
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
-  var frameLength = 100;
+  var frameLength = 1000;
   var snake;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
@@ -129,15 +129,23 @@ JS_SNAKE.Snake = (function () {
   }
 
   function checkCollision() {
+    var collision = false;
     var head = posArray[0];
     var snakeX = head[0];
     var snakeY = head[1];
     var widthInBlocks = JS_SNAKE.width / JS_SNAKE.blockSize;
     var heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
     if (snakeX < 0 || snakeY < 0 || snakeX >= widthInBlocks || snakeY >= heightInBlocks) {
-      return true;
+      collision = true;
     }
-    return false;
+    $.each(posArray.slice(1), function (index, item) {
+      console.log(item);
+      console.log(snakeX, snakeY);
+      if (snakeX === item[0] && snakeY === item[1]) {
+        collision = true;
+      }
+    });
+    return collision;
   }
 
   function advance() {
