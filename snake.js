@@ -81,15 +81,11 @@ JS_SNAKE.Snake = (function () {
 
   function init(context) {
     ctx = context;
-    direction = 'right';
+    nextDirection = direction = 'right';
     posArray.push([4, 4]);
   }
 
   function setDirection(newDirection) {
-    nextDirection = newDirection;
-  }
-
-  function checkNextDirection() {
     var allowedDirections;
 
     switch (direction) {
@@ -104,8 +100,9 @@ JS_SNAKE.Snake = (function () {
     default:
       throw('Invalid direction');
     }
-
-    return allowedDirections.indexOf(nextDirection) > -1;
+    if (allowedDirections.indexOf(newDirection) > -1) {
+      nextDirection = newDirection;
+    }
   }
 
   function drawSection(position) {
@@ -121,9 +118,7 @@ JS_SNAKE.Snake = (function () {
 
   function advance() {
     var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
-    if (checkNextDirection()) {
-      direction = nextDirection;
-    }
+    direction = nextDirection;
     switch (direction) {
     case 'left':
       nextPosition[0] -= 1;
