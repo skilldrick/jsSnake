@@ -9,6 +9,7 @@ JS_SNAKE.Game = (function () {
   var counter = 0;
   var frameLength = 1000;
   var snake;
+  var apple;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
   JS_SNAKE.blockSize = 10;
@@ -17,24 +18,33 @@ JS_SNAKE.Game = (function () {
     counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
     snake.advance();
-    drawBorder();
+    draw();
 
     if (snake.checkCollision()) {
       snake.retreat(); //move snake back to previous position
-      snake.draw();
+      draw();
       gameOver();
     }
     else {
-      snake.draw();
       setTimeout(gameLoop, frameLength);
     }
+  }
+
+  function draw() {
+    snake.draw();
+    apple.draw();
+    drawBorder();
   }
 
   function drawBorder() {
     ctx.strokeStyle = 'gray';
     ctx.lineWidth = 2;
-    var corners = [[1, 1], [JS_SNAKE.width - 1, 1],
-      [JS_SNAKE.width - 1, JS_SNAKE.height - 1], [1, JS_SNAKE.height - 1]];
+    var corners = [
+      [1, 1],
+      [JS_SNAKE.width - 1, 1],
+      [JS_SNAKE.width - 1, JS_SNAKE.height - 1],
+      [1, JS_SNAKE.height - 1]
+    ];
     ctx.moveTo.apply(ctx, corners[3]);
     $.each(corners, function (index, corner) {
       ctx.lineTo.apply(ctx, corner);
@@ -71,12 +81,44 @@ JS_SNAKE.Game = (function () {
     ctx.fillStyle = "black";
     snake = JS_SNAKE.Snake;
     snake.init(ctx);
+    apple = JS_SNAKE.Apple;
+    apple.init(ctx);
     bindEvents();
     gameLoop();
   }
 
   return {
     init: init
+  };
+})();
+
+JS_SNAKE.Apple = (function () {
+  var position;
+  var ctx;
+
+  function init(context) {
+    ctx = context;
+    position = [10, 10];
+  }
+
+  function draw() {
+    ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
+      JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+  }
+
+
+  function setNewPosition(snakeArray) {
+  }
+
+  function getPosition() {
+    return position;
+  }
+
+  return {
+    init: init,
+    draw: draw,
+    setNewPosition: setNewPosition,
+    getPosition: getPosition
   };
 })();
 
@@ -140,8 +182,6 @@ JS_SNAKE.Snake = (function () {
       collision = true;
     }
     $.each(posArray.slice(1), function (index, item) {
-      console.log(item);
-      console.log(snakeX, snakeY);
       if (snakeX === item[0] && snakeY === item[1]) {
         collision = true;
       }
