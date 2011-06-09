@@ -13,7 +13,7 @@ JS_SNAKE.Game = (function () {
   function gameLoop() {
     counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
-    drawGrid();
+    drawGrid(); //delete this eventually
     snake.advance();
     snake.draw();
     setTimeout(gameLoop, frameLength);
@@ -61,7 +61,6 @@ JS_SNAKE.Snake = (function () {
     posArray.push([4, 4]);
   }
 
-  //previous, current and next positions
   function drawSection(position) {
     ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
       JS_SNAKE.blockSize, JS_SNAKE.blockSize);
@@ -74,7 +73,26 @@ JS_SNAKE.Snake = (function () {
   }
 
   function advance() {
-    //posArray.pop();
+    var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
+    switch (direction) {
+    case 'up':
+      nextPosition[1] -= 1; //y axis starts at top
+      break;
+    case 'right':
+      nextPosition[0] += 1;
+      break;
+    case 'down':
+      nextPosition[1] += 1;
+      break;
+    case 'left':
+      nextPosition[0] -= 1;
+      break;
+    default:
+      throw('Invalid direction');
+    }
+
+    posArray.unshift(nextPosition);
+    posArray.pop();
   }
 
   return {
