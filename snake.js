@@ -1,5 +1,8 @@
 var JS_SNAKE = {};
 
+$(function () {
+  JS_SNAKE.Game.init();
+});
 
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
@@ -32,16 +35,36 @@ JS_SNAKE.Game = (function () {
     ctx.stroke();
   }
 
+  function bindEvents() {
+    $('body').keydown(function (event) {
+      switch (event.which) {
+      case 37:
+        snake.setDirection('left');
+        break;
+      case 38:
+        snake.setDirection('up');
+        break;
+      case 39:
+        snake.setDirection('right');
+        break;
+      case 40:
+        snake.setDirection('down');
+        break;
+      }
+    });
+  }
+
   function init() {
-    //canvas = document.getElementById('canvas');
-    canvas = document.createElement('canvas');
-    document.body.appendChild(canvas);
-    canvas.setAttribute('width', JS_SNAKE.width);
-    canvas.setAttribute('height', JS_SNAKE.height);
+    $('body').append('<canvas>');
+    var $canvas = $('canvas');
+    $canvas.attr('width', JS_SNAKE.width);
+    $canvas.attr('height', JS_SNAKE.height);
+    canvas = $canvas[0];
     ctx = canvas.getContext('2d');
     ctx.fillStyle = "black";
     snake = JS_SNAKE.Snake;
     snake.init(ctx);
+    bindEvents();
     gameLoop();
   }
 
@@ -54,11 +77,35 @@ JS_SNAKE.Snake = (function () {
   var posArray = [];
   var ctx;
   var direction;
+  var nextDirection;
 
   function init(context) {
     ctx = context;
     direction = 'right';
     posArray.push([4, 4]);
+  }
+
+  function setDirection(newDirection) {
+    nextDirection = newDirection;
+  }
+
+  function checkNextDirection() {
+    var allowedDirections;
+
+    switch (direction) {
+    case 'left':
+    case 'right':
+      allowedDirections = ['up', 'down'];
+      break;
+    case 'up':
+    case 'down':
+      allowedDirections = ['left', 'right'];
+      break;
+    default:
+      throw('Invalid direction');
+    }
+
+    return allowedDirections.indexOf(nextDirection) > -1;
   }
 
   function drawSection(position) {
@@ -74,18 +121,21 @@ JS_SNAKE.Snake = (function () {
 
   function advance() {
     var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
+    if (checkNextDirection()) {
+      direction = nextDirection;
+    }
     switch (direction) {
+    case 'left':
+      nextPosition[0] -= 1;
+      break;
     case 'up':
-      nextPosition[1] -= 1; //y axis starts at top
+      nextPosition[1] -= 1;
       break;
     case 'right':
       nextPosition[0] += 1;
       break;
     case 'down':
       nextPosition[1] += 1;
-      break;
-    case 'left':
-      nextPosition[0] -= 1;
       break;
     default:
       throw('Invalid direction');
@@ -98,9 +148,9 @@ JS_SNAKE.Snake = (function () {
   return {
     init: init,
     draw: draw,
-    advance: advance
+    advance: advance,
+    setDirection: setDirection
   };
 })();
 
 
-JS_SNAKE.Game.init();
