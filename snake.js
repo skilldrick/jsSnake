@@ -24,6 +24,7 @@ JS_SNAKE.Game = (function () {
   var frameLength = 500;
   var snake;
   var apple;
+  var score = 0;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
   JS_SNAKE.blockSize = 10;
@@ -89,6 +90,12 @@ JS_SNAKE.Game = (function () {
         snake.setDirection('down');
         break;
       }
+    });
+
+    $(JS_SNAKE.Snake).bind('appleEaten', function (event, snakePositions) {
+      apple.setNewPosition(snakePositions);
+      score++;
+      frameLength *= 0.95;
     });
   }
 
@@ -253,7 +260,7 @@ JS_SNAKE.Snake = (function () {
     previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
     if (isEatingApple(posArray[0], apple)) {
-      apple.setNewPosition(posArray);
+      $(JS_SNAKE.Snake).trigger('appleEaten', [posArray]);
     }
     else {
       posArray.pop();
