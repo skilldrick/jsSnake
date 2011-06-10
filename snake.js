@@ -91,7 +91,7 @@ JS_SNAKE.Game = (function () {
     ctx.textBaseline = 'middle';
     ctx.fillText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
     ctx.font = 'bold 20px sans-serif';
-    ctx.fillText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 30);
+    ctx.fillText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 25);
     ctx.restore();
   }
 
@@ -115,6 +115,11 @@ JS_SNAKE.Game = (function () {
     });
     ctx.stroke();
     ctx.restore();
+  }
+
+  function restart() {
+    clearTimeout(timeout);
+    JS_SNAKE.Game.init();
   }
   
   function bindEvents() {
@@ -141,11 +146,7 @@ JS_SNAKE.Game = (function () {
       frameLength *= 0.95;
     });
 
-    $(canvas).click(function () {
-      clearTimeout(timeout);
-      JS_SNAKE.Game.init();
-    });
-
+    $(canvas).click(restart);
   }
 
   return {
