@@ -21,15 +21,34 @@ JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
-  var frameLength = 500;
+  var frameLength;
   var snake;
   var apple;
-  var score = 0;
+  var score;
+  var timeout;
   JS_SNAKE.width = 200;
   JS_SNAKE.height = 200;
   JS_SNAKE.blockSize = 10;
   JS_SNAKE.widthInBlocks = JS_SNAKE.width / JS_SNAKE.blockSize;
   JS_SNAKE.heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
+
+  function init() {
+    $('body').append('<canvas>');
+    var $canvas = $('canvas');
+    $canvas.attr('width', JS_SNAKE.width);
+    $canvas.attr('height', JS_SNAKE.height);
+    canvas = $canvas[0];
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle = "black";
+    score = 0;
+    frameLength = 500;
+    snake = JS_SNAKE.Snake;
+    snake.init(ctx);
+    apple = JS_SNAKE.Apple;
+    apple.init(ctx);
+    bindEvents();
+    gameLoop();
+  }
 
   function gameLoop() {
     counter++;
@@ -39,11 +58,11 @@ JS_SNAKE.Game = (function () {
 
     if (snake.checkCollision()) {
       snake.retreat(); //move snake back to previous position
-      draw();
+      snake.draw(); //draw snake in its previous position
       gameOver();
     }
     else {
-      setTimeout(gameLoop, frameLength);
+      timeout = setTimeout(gameLoop, frameLength);
     }
   }
 
@@ -51,7 +70,31 @@ JS_SNAKE.Game = (function () {
     snake.draw();
     drawBorder();
     apple.draw();
+    drawScore();
   }
+
+  function drawScore() {
+    ctx.save();
+    ctx.font = 'bold 102px sans-serif';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(score.toString(), JS_SNAKE.width / 2, JS_SNAKE.height / 2);
+    ctx.restore();
+  }
+
+  function gameOver() {
+    ctx.save();
+    ctx.font = 'bold 30px sans-serif';
+    ctx.fillStyle = '#000';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 30);
+    ctx.restore();
+  }
+
 
   function drawBorder() {
     ctx.save();
@@ -97,22 +140,12 @@ JS_SNAKE.Game = (function () {
       score++;
       frameLength *= 0.95;
     });
-  }
 
-  function init() {
-    $('body').append('<canvas>');
-    var $canvas = $('canvas');
-    $canvas.attr('width', JS_SNAKE.width);
-    $canvas.attr('height', JS_SNAKE.height);
-    canvas = $canvas[0];
-    ctx = canvas.getContext('2d');
-    ctx.fillStyle = "black";
-    snake = JS_SNAKE.Snake;
-    snake.init(ctx);
-    apple = JS_SNAKE.Apple;
-    apple.init(ctx);
-    bindEvents();
-    gameLoop();
+    $(canvas).click(function () {
+      clearTimeout(timeout);
+      JS_SNAKE.Game.init();
+    });
+
   }
 
   return {
@@ -175,7 +208,7 @@ JS_SNAKE.Apple = (function () {
 
 JS_SNAKE.Snake = (function () {
   var previousPosArray;
-  var posArray = [];
+  var posArray;
   var ctx;
   var direction;
   var nextDirection;
@@ -183,6 +216,7 @@ JS_SNAKE.Snake = (function () {
   function init(context) {
     ctx = context;
     nextDirection = direction = 'right';
+    posArray = [];
     posArray.push([6, 4]);
     posArray.push([5, 4]);
   }
