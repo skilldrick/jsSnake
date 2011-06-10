@@ -123,7 +123,7 @@ JS_SNAKE.Apple = (function () {
 
   function draw() {
     ctx.save();
-    ctx.fillStyle = '0a0';
+    ctx.fillStyle = '0a0'; //apple green
     ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
       JS_SNAKE.blockSize, JS_SNAKE.blockSize);
     ctx.restore();
@@ -251,12 +251,16 @@ JS_SNAKE.Snake = (function () {
 
     previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
-    if (JS_SNAKE.equalCoordinates(posArray[0], apple.getPosition())) {
+    if (isEatingApple(posArray[0], apple)) {
       apple.setNewPosition(posArray);
     }
     else {
       posArray.pop();
     }
+  }
+
+  function isEatingApple(head, apple) {
+    return JS_SNAKE.equalCoordinates(head, apple.getPosition());
   }
 
   function retreat() {
