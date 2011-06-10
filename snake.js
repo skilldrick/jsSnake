@@ -21,11 +21,11 @@ JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
   var counter = 0;
-  var frameLength = 1000;
+  var frameLength = 500;
   var snake;
   var apple;
-  JS_SNAKE.width = 100;
-  JS_SNAKE.height = 100;
+  JS_SNAKE.width = 200;
+  JS_SNAKE.height = 200;
   JS_SNAKE.blockSize = 10;
   JS_SNAKE.widthInBlocks = JS_SNAKE.width / JS_SNAKE.blockSize;
   JS_SNAKE.heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
@@ -64,6 +64,7 @@ JS_SNAKE.Game = (function () {
       [JS_SNAKE.width - offset, JS_SNAKE.height - offset],
       [offset, JS_SNAKE.height - offset]
     ];
+    ctx.beginPath();
     ctx.moveTo.apply(ctx, corners[3]);
     $.each(corners, function (index, corner) {
       ctx.lineTo.apply(ctx, corner);
@@ -124,8 +125,12 @@ JS_SNAKE.Apple = (function () {
   function draw() {
     ctx.save();
     ctx.fillStyle = '0a0'; //apple green
-    ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
-      JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+    ctx.beginPath();
+    var radius = JS_SNAKE.blockSize / 2;
+    var x = position[0] * JS_SNAKE.blockSize + radius;
+    var y = position[1] * JS_SNAKE.blockSize + radius;
+    ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+    ctx.fill();
     ctx.restore();
   }
 
@@ -173,10 +178,6 @@ JS_SNAKE.Snake = (function () {
     nextDirection = direction = 'right';
     posArray.push([6, 4]);
     posArray.push([5, 4]);
-    posArray.push([4, 4]);
-    posArray.push([3, 4]);
-    posArray.push([2, 4]);
-    posArray.push([1, 4]);
   }
 
   function setDirection(newDirection) {
