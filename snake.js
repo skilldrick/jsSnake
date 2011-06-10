@@ -76,7 +76,7 @@ JS_SNAKE.Game = (function () {
   function drawScore() {
     ctx.save();
     ctx.font = 'bold 102px sans-serif';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(score.toString(), JS_SNAKE.width / 2, JS_SNAKE.height / 2);
@@ -242,8 +242,11 @@ JS_SNAKE.Snake = (function () {
   }
 
   function drawSection(position) {
+    ctx.save();
+    ctx.fillStyle = '#33a';
     ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
       JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+    ctx.restore();
   }
 
   function draw() {
