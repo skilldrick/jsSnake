@@ -78,7 +78,9 @@ JS_SNAKE.game = (function () {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(score.toString(), JS_SNAKE.width / 2, JS_SNAKE.height / 2);
+    var centreX = JS_SNAKE.width / 2;
+    var centreY = JS_SNAKE.width / 2;
+    ctx.fillText(score.toString(), centreX, centreY);
     ctx.restore();
   }
 
@@ -90,11 +92,13 @@ JS_SNAKE.game = (function () {
     ctx.textBaseline = 'middle';
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
-    ctx.strokeText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
-    ctx.fillText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
+    var centreX = JS_SNAKE.width / 2;
+    var centreY = JS_SNAKE.width / 2;
+    ctx.strokeText('Game Over', centreX, centreY);
+    ctx.fillText('Game Over', centreX, centreY);
     ctx.font = 'bold 20px sans-serif';
-    ctx.strokeText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 25);
-    ctx.fillText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 25);
+    ctx.strokeText('Click to restart', centreX, centreY + 25);
+    ctx.fillText('Click to restart', centreX, centreY + 25);
     ctx.restore();
   }
 
@@ -242,8 +246,9 @@ JS_SNAKE.snake = function (ctx) {
   function drawSection(position) {
     ctx.save();
     ctx.fillStyle = '#33a';
-    ctx.fillRect(JS_SNAKE.blockSize * position[0], JS_SNAKE.blockSize * position[1],
-      JS_SNAKE.blockSize, JS_SNAKE.blockSize);
+    var x = JS_SNAKE.blockSize * position[0];
+    var y = JS_SNAKE.blockSize * position[1];
+    ctx.fillRect(x, y, JS_SNAKE.blockSize, JS_SNAKE.blockSize);
     ctx.restore();
   }
 
@@ -256,24 +261,29 @@ JS_SNAKE.snake = function (ctx) {
   function checkCollision() {
     var wallCollision = false;
     var snakeCollision = false;
-    var head = posArray[0];
+    var head = posArray[0]; //just the head
+    var rest = posArray.slice(1); //the rest of the snake
     var snakeX = head[0];
     var snakeY = head[1];
     var minX = 1;
     var minY = 1;
     var maxX = JS_SNAKE.widthInBlocks - 1;
     var maxY = JS_SNAKE.heightInBlocks - 1;
+    var outsideHorizontalBounds = snakeX < minX || snakeX >= maxX;
+    var outsideVerticalBounds = snakeY < minY || snakeY >= maxY;
 
-    if (snakeX < minX || snakeY < minY || snakeX >= maxX || snakeY >= maxY) {
+    if (outsideHorizontalBounds || outsideVerticalBounds) {
       wallCollision = true;
     }
     //check if the snake head coords overlap the rest of the snake
-    snakeCollision = JS_SNAKE.checkCoordinateInArray(head, posArray.slice(1));
+    snakeCollision = JS_SNAKE.checkCoordinateInArray(head, rest);
     return wallCollision || snakeCollision;
   }
 
   function advance(apple) {
-    var nextPosition = posArray[0].slice(); //make a copy of the head of the snake
+    //make a copy of the head of the snake otherwise
+    //the changes below would affect the head of the snake
+    var nextPosition = posArray[0].slice();
     direction = nextDirection;
     switch (direction) {
     case 'left':
