@@ -43,10 +43,8 @@ JS_SNAKE.game = (function () {
     ctx.fillStyle = "black";
     score = 0;
     frameLength = 500;
-    snake = JS_SNAKE.snake();
-    snake.init(ctx);
-    apple = JS_SNAKE.apple();
-    apple.init(ctx);
+    snake = JS_SNAKE.snake(ctx);
+    apple = JS_SNAKE.apple(ctx);
     bindEvents();
     gameLoop();
   }
@@ -166,14 +164,8 @@ JS_SNAKE.game = (function () {
   };
 })();
 
-JS_SNAKE.apple = function () {
-  var position;
-  var ctx;
-
-  function init(context) {
-    ctx = context;
-    position = [6, 6];
-  }
+JS_SNAKE.apple = function (ctx) {
+  var position = [6, 6];
 
   function draw() {
     ctx.save();
@@ -212,27 +204,20 @@ JS_SNAKE.apple = function () {
   }
 
   return {
-    init: init,
     draw: draw,
     setNewPosition: setNewPosition,
     getPosition: getPosition
   };
 };
 
-JS_SNAKE.snake = function () {
+JS_SNAKE.snake = function (ctx) {
   var previousPosArray;
-  var posArray;
+  var posArray = [];
+  posArray.push([6, 4]);
+  posArray.push([5, 4]);
   var ctx;
   var direction;
-  var nextDirection;
-
-  function init(context) {
-    ctx = context;
-    nextDirection = direction = 'right';
-    posArray = [];
-    posArray.push([6, 4]);
-    posArray.push([5, 4]);
-  }
+  var nextDirection = direction = 'right';
 
   function setDirection(newDirection) {
     var allowedDirections;
@@ -326,7 +311,6 @@ JS_SNAKE.snake = function () {
   }
 
   return {
-    init: init,
     draw: draw,
     advance: advance,
     retreat: retreat,
