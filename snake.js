@@ -1,8 +1,5 @@
 var JS_SNAKE = {};
 
-$(function () {
-  JS_SNAKE.Game.init();
-});
 
 JS_SNAKE.equalCoordinates = function (coord1, coord2) {
   return coord1[0] === coord2[0] && coord1[1] === coord2[1];
@@ -89,8 +86,12 @@ JS_SNAKE.Game = (function () {
     ctx.fillStyle = '#000';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.strokeText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
     ctx.fillText('Game Over', JS_SNAKE.width / 2, JS_SNAKE.height / 2);
     ctx.font = 'bold 20px sans-serif';
+    ctx.strokeText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 25);
     ctx.fillText('Click to restart', JS_SNAKE.width / 2, JS_SNAKE.height / 2 + 25);
     ctx.restore();
   }
@@ -127,15 +128,19 @@ JS_SNAKE.Game = (function () {
       switch (event.which) {
       case 37:
         snake.setDirection('left');
+        event.preventDefault();
         break;
       case 38:
         snake.setDirection('up');
+        event.preventDefault();
         break;
       case 39:
         snake.setDirection('right');
+        event.preventDefault();
         break;
       case 40:
         snake.setDirection('down');
+        event.preventDefault();
         break;
       }
     });
@@ -143,7 +148,7 @@ JS_SNAKE.Game = (function () {
     $(JS_SNAKE.Snake).bind('appleEaten', function (event, snakePositions) {
       apple.setNewPosition(snakePositions);
       score++;
-      frameLength *= 0.95;
+      frameLength *= 0.99; //subtle speed-up
     });
 
     $(canvas).click(restart);
@@ -324,3 +329,4 @@ JS_SNAKE.Snake = (function () {
 })();
 
 
+JS_SNAKE.Game.init();
