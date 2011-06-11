@@ -94,11 +94,11 @@ JS_SNAKE.game = (function () {
     ctx.lineWidth = 2;
     var centreX = JS_SNAKE.width / 2;
     var centreY = JS_SNAKE.width / 2;
-    ctx.strokeText('Game Over', centreX, centreY);
-    ctx.fillText('Game Over', centreX, centreY);
-    ctx.font = 'bold 20px sans-serif';
-    ctx.strokeText('Click to restart', centreX, centreY + 25);
-    ctx.fillText('Click to restart', centreX, centreY + 25);
+    ctx.strokeText('Game Over', centreX, centreY - 10);
+    ctx.fillText('Game Over', centreX, centreY - 10);
+    ctx.font = 'bold 15px sans-serif';
+    ctx.strokeText('Press space to restart', centreX, centreY + 15);
+    ctx.fillText('Press space to restart', centreX, centreY + 15);
     ctx.restore();
   }
 
@@ -150,6 +150,9 @@ JS_SNAKE.game = (function () {
       case 40:
         snake.setDirection('down');
         event.preventDefault();
+        break;
+      case 32:
+        restart();
         break;
       }
     });
