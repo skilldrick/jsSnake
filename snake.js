@@ -150,7 +150,7 @@ JS_SNAKE.game = (function () {
       }
     });
 
-    $(JS_SNAKE.snake).bind('appleEaten', function (event, snakePositions) {
+    $(JS_SNAKE).bind('appleEaten', function (event, snakePositions) {
       apple.setNewPosition(snakePositions);
       score++;
       frameLength *= 0.99; //subtle speed-up
@@ -295,7 +295,7 @@ JS_SNAKE.snake = function (ctx) {
     previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
     if (isEatingApple(posArray[0], apple)) {
-      $(JS_SNAKE.snake).trigger('appleEaten', [posArray]);
+      $(JS_SNAKE).trigger('appleEaten', [posArray]);
     }
     else {
       posArray.pop();
