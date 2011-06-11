@@ -30,7 +30,10 @@ JS_SNAKE.Game = (function () {
   JS_SNAKE.heightInBlocks = JS_SNAKE.height / JS_SNAKE.blockSize;
 
   function init() {
-    $('body').append('<canvas>');
+    $canvas = $('#jsSnake');
+    if ($canvas.length === 0) {
+      $('body').append('<canvas id="jsSnake">');
+    }
     var $canvas = $('canvas');
     $canvas.attr('width', JS_SNAKE.width);
     $canvas.attr('height', JS_SNAKE.height);
@@ -39,9 +42,9 @@ JS_SNAKE.Game = (function () {
     ctx.fillStyle = "black";
     score = 0;
     frameLength = 500;
-    snake = JS_SNAKE.Snake;
+    snake = JS_SNAKE.Snake();
     snake.init(ctx);
-    apple = JS_SNAKE.Apple;
+    apple = JS_SNAKE.Apple();
     apple.init(ctx);
     bindEvents();
     gameLoop();
@@ -120,6 +123,8 @@ JS_SNAKE.Game = (function () {
 
   function restart() {
     clearTimeout(timeout);
+    $('body').unbind('keydown');
+    $(JS_SNAKE).unbind('appleEaten');
     JS_SNAKE.Game.init();
   }
   
@@ -159,7 +164,7 @@ JS_SNAKE.Game = (function () {
   };
 })();
 
-JS_SNAKE.Apple = (function () {
+JS_SNAKE.Apple = function () {
   var position;
   var ctx;
 
@@ -210,9 +215,9 @@ JS_SNAKE.Apple = (function () {
     setNewPosition: setNewPosition,
     getPosition: getPosition
   };
-})();
+};
 
-JS_SNAKE.Snake = (function () {
+JS_SNAKE.Snake = function () {
   var previousPosArray;
   var posArray;
   var ctx;
@@ -326,7 +331,7 @@ JS_SNAKE.Snake = (function () {
     setDirection: setDirection,
     checkCollision: checkCollision
   };
-})();
+};
 
 
 JS_SNAKE.Game.init();
