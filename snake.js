@@ -43,8 +43,8 @@ JS_SNAKE.game = (function () {
     ctx.fillStyle = "black";
     score = 0;
     frameLength = 500;
-    snake = JS_SNAKE.snake(ctx);
-    apple = JS_SNAKE.apple(ctx);
+    snake = JS_SNAKE.snake();
+    apple = JS_SNAKE.apple();
     bindEvents();
     gameLoop();
   }
@@ -66,9 +66,9 @@ JS_SNAKE.game = (function () {
   }
 
   function draw() {
-    snake.draw();
+    snake.draw(ctx);
     drawBorder();
-    apple.draw();
+    apple.draw(ctx);
     drawScore();
   }
 
@@ -171,10 +171,10 @@ JS_SNAKE.game = (function () {
   };
 })();
 
-JS_SNAKE.apple = function (ctx) {
+JS_SNAKE.apple = function () {
   var position = [6, 6];
 
-  function draw() {
+  function draw(ctx) {
     ctx.save();
     ctx.fillStyle = '0a0'; //apple green
     ctx.beginPath();
@@ -217,12 +217,11 @@ JS_SNAKE.apple = function (ctx) {
   };
 };
 
-JS_SNAKE.snake = function (ctx) {
+JS_SNAKE.snake = function () {
   var previousPosArray;
   var posArray = [];
   posArray.push([6, 4]);
   posArray.push([5, 4]);
-  var ctx;
   var direction;
   var nextDirection = direction = 'right';
 
@@ -246,7 +245,7 @@ JS_SNAKE.snake = function (ctx) {
     }
   }
 
-  function drawSection(position) {
+  function drawSection(ctx, position) {
     ctx.save();
     ctx.fillStyle = '#33a';
     var x = JS_SNAKE.blockSize * position[0];
@@ -255,9 +254,9 @@ JS_SNAKE.snake = function (ctx) {
     ctx.restore();
   }
 
-  function draw() {
+  function draw(ctx) {
     for(var i = 0; i < posArray.length; i++) {
-      drawSection(posArray[i]);
+      drawSection(ctx, posArray[i]);
     }
   }
 
