@@ -17,6 +17,7 @@ JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
 
 JS_SNAKE.Game = (function () {
   var canvas, ctx;
+  var $canvas;
   var counter = 0;
   var frameLength;
   var snake;
@@ -125,6 +126,7 @@ JS_SNAKE.Game = (function () {
     clearTimeout(timeout);
     $('body').unbind('keydown');
     $(JS_SNAKE).unbind('appleEaten');
+    $(canvas).unbind('click');
     JS_SNAKE.Game.init();
   }
   
