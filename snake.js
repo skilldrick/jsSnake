@@ -15,7 +15,7 @@ JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
   return isInArray;
 };
 
-JS_SNAKE.Game = (function () {
+JS_SNAKE.game = (function () {
   var canvas, ctx;
   var $canvas;
   var counter = 0;
@@ -43,9 +43,9 @@ JS_SNAKE.Game = (function () {
     ctx.fillStyle = "black";
     score = 0;
     frameLength = 500;
-    snake = JS_SNAKE.Snake();
+    snake = JS_SNAKE.snake();
     snake.init(ctx);
-    apple = JS_SNAKE.Apple();
+    apple = JS_SNAKE.apple();
     apple.init(ctx);
     bindEvents();
     gameLoop();
@@ -127,7 +127,7 @@ JS_SNAKE.Game = (function () {
     $('body').unbind('keydown');
     $(JS_SNAKE).unbind('appleEaten');
     $(canvas).unbind('click');
-    JS_SNAKE.Game.init();
+    JS_SNAKE.game.init();
   }
   
   function bindEvents() {
@@ -152,7 +152,7 @@ JS_SNAKE.Game = (function () {
       }
     });
 
-    $(JS_SNAKE.Snake).bind('appleEaten', function (event, snakePositions) {
+    $(JS_SNAKE.snake).bind('appleEaten', function (event, snakePositions) {
       apple.setNewPosition(snakePositions);
       score++;
       frameLength *= 0.99; //subtle speed-up
@@ -166,7 +166,7 @@ JS_SNAKE.Game = (function () {
   };
 })();
 
-JS_SNAKE.Apple = function () {
+JS_SNAKE.apple = function () {
   var position;
   var ctx;
 
@@ -219,7 +219,7 @@ JS_SNAKE.Apple = function () {
   };
 };
 
-JS_SNAKE.Snake = function () {
+JS_SNAKE.snake = function () {
   var previousPosArray;
   var posArray;
   var ctx;
@@ -310,7 +310,7 @@ JS_SNAKE.Snake = function () {
     previousPosArray = posArray.slice(); //save previous array
     posArray.unshift(nextPosition);
     if (isEatingApple(posArray[0], apple)) {
-      $(JS_SNAKE.Snake).trigger('appleEaten', [posArray]);
+      $(JS_SNAKE.snake).trigger('appleEaten', [posArray]);
     }
     else {
       posArray.pop();
@@ -336,4 +336,4 @@ JS_SNAKE.Snake = function () {
 };
 
 
-JS_SNAKE.Game.init();
+JS_SNAKE.game.init();
