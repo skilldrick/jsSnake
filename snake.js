@@ -16,9 +16,7 @@ JS_SNAKE.checkCoordinateInArray = function (coord, arr) {
 };
 
 JS_SNAKE.game = (function () {
-  var canvas, ctx;
-  var $canvas;
-  var counter = 0;
+  var $canvas, canvas, ctx;
   var frameLength;
   var snake;
   var apple;
@@ -50,14 +48,13 @@ JS_SNAKE.game = (function () {
   }
 
   function gameLoop() {
-    counter++;
     ctx.clearRect(0, 0, JS_SNAKE.width, JS_SNAKE.height);
     snake.advance(apple);
     draw();
 
     if (snake.checkCollision()) {
       snake.retreat(); //move snake back to previous position
-      snake.draw(); //draw snake in its previous position
+      snake.draw(ctx); //draw snake in its previous position
       gameOver();
     }
     else {
@@ -101,7 +98,6 @@ JS_SNAKE.game = (function () {
     ctx.fillText('Press space to restart', centreX, centreY + 15);
     ctx.restore();
   }
-
 
   function drawBorder() {
     ctx.save();
