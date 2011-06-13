@@ -129,7 +129,7 @@ JS_SNAKE.game = (function () {
   }
   
   function bindEvents() {
-    $('body').keydown(function (event) {
+    $(document).keydown(function (event) {
       switch (event.which) {
       case 37:
         snake.setDirection('left');
@@ -172,7 +172,7 @@ JS_SNAKE.apple = function () {
 
   function draw(ctx) {
     ctx.save();
-    ctx.fillStyle = '0a0'; //apple green
+    ctx.fillStyle = '#0a0'; //apple green
     ctx.beginPath();
     var radius = JS_SNAKE.blockSize / 2;
     var x = position[0] * JS_SNAKE.blockSize + radius;
